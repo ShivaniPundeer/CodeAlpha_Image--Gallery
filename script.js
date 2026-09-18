@@ -8,11 +8,11 @@
 ------------------------------------------------------------------ */
 
 const CATEGORIES = {
-  nature:     { label: "Nature",     keyword: "nature,landscape" },
-  animals:    { label: "Animals",    keyword: "animal,wildlife"  },
-  food:       { label: "Food",       keyword: "food,dish"        },
-  fruits:     { label: "Fruits",     keyword: "fruit"            },
-  vegetables: { label: "Vegetables", keyword: "vegetable"        }
+  nature:     { label: "Nature",     keyword: "landscape" },
+  animals:    { label: "Animals",    keyword: "animal"    },
+  food:       { label: "Food",       keyword: "food"       },
+  fruits:     { label: "Fruits",     keyword: "fruit"      },
+  vegetables: { label: "Vegetables", keyword: "vegetable"  }
 };
 
 const IMAGES_PER_CATEGORY = 20;
@@ -98,8 +98,7 @@ function renderGallery(list) {
     card.setAttribute("aria-label", `Open ${img.alt}`);
 
     card.innerHTML = `
-      <img src="${img.thumb}" alt="${img.alt}" loading="lazy"
-           onerror="this.onerror=null;this.src='${img.thumbFallback}';">
+      <img src="${img.thumb}" alt="${img.alt}" loading="lazy" data-fallback="${img.thumbFallback}">
       <figcaption class="card__overlay">
         <span>
           <span class="card__label">${img.label}</span><br>
@@ -120,9 +119,27 @@ function renderGallery(list) {
   });
 
   galleryEl.appendChild(frag);
+  armImageFallbacks();
 
   const label = activeCategory === "all" ? "all categories" : CATEGORIES[activeCategory].label.toLowerCase();
   resultsNoteEl.textContent = `Showing ${list.length} photographs — ${label}.`;
+}
+
+/* Swap to the reliable fallback host if a thumbnail errors out OR
+   simply takes too long (some hosts return a valid-but-empty response
+   instead of a real error, which onerror alone won't catch). */
+function armImageFallbacks() {
+  galleryEl.querySelectorAll("img[data-fallback]").forEach((imgEl) => {
+    let done = false;
+    const swap = () => {
+      if (done) return;
+      done = true;
+      imgEl.src = imgEl.dataset.fallback;
+    };
+    imgEl.addEventListener("load", () => { done = true; }, { once: true });
+    imgEl.addEventListener("error", swap, { once: true });
+    setTimeout(swap, 4000);
+  });
 }
 
 /* ---------- Filtering ---------- */
@@ -161,11 +178,16 @@ function closeLightbox() {
 
 function updateLightbox() {
   const img = visibleSet[lightboxIndex];
-  lightboxImgEl.onerror = function () {
-    this.onerror = null;
-    this.src = img.fullFallback;
+  let done = false;
+  const swap = () => {
+    if (done) return;
+    done = true;
+    lightboxImgEl.src = img.fullFallback;
   };
+  lightboxImgEl.onload = () => { done = true; };
+  lightboxImgEl.onerror = swap;
   lightboxImgEl.src = img.full;
+  setTimeout(swap, 4000);
   lightboxImgEl.alt = img.alt;
   lightboxTagEl.textContent = `${img.label}`;
   lightboxCountEl.textContent = `${lightboxIndex + 1} / ${visibleSet.length}`;
@@ -201,4 +223,3 @@ document.addEventListener("keydown", (e) => {
 
 setCounts();
 applyFilter("all");
-
