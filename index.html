@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harvest &amp; Wild — Photo Gallery</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-head">
+  <p class="site-head__eyebrow">A field guide in pictures</p>
+  <h1 class="site-head__title">Image &amp; Gallery</h1>
+  <p class="site-head__sub">One hundred photographs of what grows, what roams, and what ends up on the plate.</p>
+</header>
+
+<nav class="filters" aria-label="Filter gallery by category">
+  <button class="filter-btn is-active" data-category="all">All <span class="filter-btn__count" id="count-all"></span></button>
+  <button class="filter-btn" data-category="nature">Nature <span class="filter-btn__count" id="count-nature"></span></button>
+  <button class="filter-btn" data-category="animals">Animals <span class="filter-btn__count" id="count-animals"></span></button>
+  <button class="filter-btn" data-category="food">Food <span class="filter-btn__count" id="count-food"></span></button>
+  <button class="filter-btn" data-category="fruits">Fruits <span class="filter-btn__count" id="count-fruits"></span></button>
+  <button class="filter-btn" data-category="vegetables">Vegetables <span class="filter-btn__count" id="count-vegetables"></span></button>
+</nav>
+
+<main>
+  <p class="results-note" id="resultsNote"></p>
+  <section class="gallery" id="gallery" aria-live="polite"></section>
+</main>
+
+<footer class="site-foot">
+  <p>Photographs served via Flickr, gathered by category. Click any frame to view it full size.</p>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+  <button class="lightbox__close" id="lightboxClose" aria-label="Close viewer">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lightboxPrev" aria-label="Previous image">&#8249;</button>
+
+  <figure class="lightbox__frame">
+    <div class="lightbox__imgwrap">
+      <img class="lightbox__img" id="lightboxImg" src="" alt="">
+    </div>
+    <figcaption class="lightbox__caption">
+      <span class="lightbox__tag" id="lightboxTag"></span>
+      <span class="lightbox__count" id="lightboxCount"></span>
+    </figcaption>
+  </figure>
+
+  <button class="lightbox__nav lightbox__nav--next" id="lightboxNext" aria-label="Next image">&#8250;</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
