@@ -1,0 +1,294 @@
+/* ---------------------------------------------------
+   Harvest & Wild — token system
+   Color:  #1B2A21 (deep forest, bg) · #23342A (panel)
+           #F6F1E4 (ivory, text) · #D9A441 (mustard, accent)
+           #8FA98C (sage, muted) · #E8DFC8 (card bg)
+   Type:   Fraunces (display/serif) for headings,
+           Work Sans (sans) for everything functional
+--------------------------------------------------- */
+
+:root {
+  --bg: #1B2A21;
+  --panel: #23342A;
+  --ivory: #F6F1E4;
+  --mustard: #D9A441;
+  --sage: #8FA98C;
+  --shadow: rgba(10, 16, 11, 0.45);
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ivory);
+  font-family: 'Work Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+/* ---------- Header ---------- */
+
+.site-head {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 2.5rem;
+  text-align: center;
+}
+
+.site-head__eyebrow {
+  font-size: 0.95rem;
+  color: var(--sage);
+  margin: 0 0 0.6rem;
+}
+
+.site-head__title {
+  font-family: 'Fraunces', serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-size: clamp(2.6rem, 6vw, 4.2rem);
+  line-height: 1.05;
+  margin: 0 0 0.9rem;
+}
+
+.site-head__sub {
+  font-size: 1.05rem;
+  color: var(--sage);
+  max-width: 46ch;
+  margin: 0 auto;
+  line-height: 1.55;
+}
+
+/* ---------- Filters ---------- */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0 1.5rem 2.5rem;
+}
+
+.filter-btn {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--ivory);
+  background: transparent;
+  border: 1px solid rgba(246, 241, 228, 0.28);
+  border-radius: 999px;
+  padding: 0.5rem 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: var(--mustard);
+  color: var(--mustard);
+}
+
+.filter-btn.is-active {
+  background: var(--mustard);
+  border-color: var(--mustard);
+  color: #1B2A21;
+}
+
+.filter-btn__count {
+  color: var(--sage);
+  font-size: 0.85em;
+}
+
+.filter-btn.is-active .filter-btn__count { color: rgba(27, 42, 33, 0.65); }
+
+/* ---------- Results note ---------- */
+
+.results-note {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  color: var(--sage);
+  font-size: 0.9rem;
+}
+
+/* ---------- Gallery: masonry via CSS columns ---------- */
+
+.gallery {
+  max-width: 1200px;
+  margin: 1rem auto 4rem;
+  padding: 0 1.5rem;
+  column-count: 1;
+  column-gap: 1rem;
+}
+
+@media (min-width: 560px)  { .gallery { column-count: 2; } }
+@media (min-width: 860px)  { .gallery { column-count: 3; } }
+@media (min-width: 1180px) { .gallery { column-count: 4; } }
+
+.card {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--panel);
+  cursor: pointer;
+  box-shadow: 0 6px 18px var(--shadow);
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scale(1);
+  transition: transform 0.5s ease;
+}
+
+.card:hover img { transform: scale(1.06); }
+
+.card__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 0.9rem;
+  background: linear-gradient(180deg, rgba(27,42,33,0) 45%, rgba(15,20,13,0.85) 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.card:hover .card__overlay,
+.card:focus-visible .card__overlay { opacity: 1; }
+
+.card__label {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  color: var(--ivory);
+}
+
+.card__tag {
+  display: inline-block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  color: var(--mustard);
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--mustard);
+  outline-offset: 2px;
+}
+
+/* ---------- Footer ---------- */
+
+.site-foot {
+  text-align: center;
+  color: var(--sage);
+  font-size: 0.85rem;
+  padding: 0 1.5rem 3rem;
+}
+
+/* ---------- Lightbox ---------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 10, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 2rem;
+  opacity: 0;
+  animation: fadeIn 0.25s ease forwards;
+}
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+.lightbox[hidden] { display: none; }
+
+.lightbox__frame {
+  margin: 0;
+  max-width: min(90vw, 900px);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox__imgwrap {
+  max-height: 74vh;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+}
+
+.lightbox__img {
+  display: block;
+  max-width: 100%;
+  max-height: 74vh;
+  object-fit: contain;
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.97); opacity: 0.6; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.lightbox__caption {
+  margin-top: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--ivory);
+  font-size: 0.9rem;
+}
+
+.lightbox__tag {
+  font-family: 'Fraunces', serif;
+  color: var(--mustard);
+  text-transform: capitalize;
+}
+
+.lightbox__count { color: var(--sage); }
+
+.lightbox__close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.5rem;
+  font-size: 2.2rem;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: var(--ivory);
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.lightbox__close:hover { color: var(--mustard); transform: rotate(90deg); }
+
+.lightbox__nav {
+  background: none;
+  border: none;
+  color: var(--ivory);
+  font-size: 3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.lightbox__nav:hover { color: var(--mustard); }
+.lightbox__nav--prev:hover { transform: translateX(-4px); }
+.lightbox__nav--next:hover { transform: translateX(4px); }
+
+@media (max-width: 640px) {
+  .lightbox { padding: 1rem; }
+  .lightbox__nav { font-size: 2.2rem; padding: 0.3rem 0.5rem; }
+  .lightbox__close { top: 0.6rem; right: 0.8rem; font-size: 1.9rem; }
+    }
+    
