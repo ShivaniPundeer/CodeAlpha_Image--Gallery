@@ -41,6 +41,11 @@ function buildGalleryData() {
         label: meta.label,
         thumb: `https://loremflickr.com/${aspect.w}/${aspect.h}/${encodeURIComponent(meta.keyword)}?lock=${lock}`,
         full:  `https://loremflickr.com/900/700/${encodeURIComponent(meta.keyword)}?lock=${lock}`,
+        // Picsum is a second, highly-reliable photo host. If loremflickr
+        // is blocked or slow, the <img> onerror handler below swaps to
+        // this instead, so the gallery never shows a broken icon.
+        thumbFallback: `https://picsum.photos/seed/${key}-${id}/${aspect.w}/${aspect.h}`,
+        fullFallback:  `https://picsum.photos/seed/${key}-${id}/900/700`,
         alt: `${meta.label} photograph #${i + 1}`
       });
       id++;
@@ -93,7 +98,8 @@ function renderGallery(list) {
     card.setAttribute("aria-label", `Open ${img.alt}`);
 
     card.innerHTML = `
-      <img src="${img.thumb}" alt="${img.alt}" loading="lazy">
+      <img src="${img.thumb}" alt="${img.alt}" loading="lazy"
+           onerror="this.onerror=null;this.src='${img.thumbFallback}';">
       <figcaption class="card__overlay">
         <span>
           <span class="card__label">${img.label}</span><br>
@@ -155,6 +161,10 @@ function closeLightbox() {
 
 function updateLightbox() {
   const img = visibleSet[lightboxIndex];
+  lightboxImgEl.onerror = function () {
+    this.onerror = null;
+    this.src = img.fullFallback;
+  };
   lightboxImgEl.src = img.full;
   lightboxImgEl.alt = img.alt;
   lightboxTagEl.textContent = `${img.label}`;
@@ -191,3 +201,4 @@ document.addEventListener("keydown", (e) => {
 
 setCounts();
 applyFilter("all");
+
